@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- "HD" large and bold -->
+  <text x="20" y="140" font-family="'Inter', Arial, sans-serif" font-weight="900" font-size="140" fill="#26415E" letter-spacing="-4">HD</text>
+  
+  <!-- "ENGINEERING" -->
+  <text x="22" y="190" font-family="'Inter', Arial, sans-serif" font-weight="500" font-size="32" fill="#26415E" letter-spacing="2">ENGINEERING</text>
+  
+  <!-- "& CONSULTING" -->
+  <text x="22" y="235" font-family="'Inter', Arial, sans-serif" font-weight="500" font-size="32" fill="#26415E" letter-spacing="2">&amp; CONSULTING</text>
+  
+  <!-- Vertical line on the right -->
+  <line x1="340" y1="30" x2="340" y2="260" stroke="#26415E" stroke-width="3" />
+</svg>

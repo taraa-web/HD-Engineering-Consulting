@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HD Engineering & Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e35;
+    --navy-scrolled: #1a2e4a;
+    --cyan: #00b4d8;
+    --white: #ffffff;
+    --light-bg: #f0f2f5;
+    --dark-card: #1e2d42;
+    --gray-text: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; color: #111827; background: var(--white); overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+  button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+  ul { list-style: none; }
+  
+  .navbar { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000; transition: background 0.3s, border-color 0.3s, color 0.3s; }
+  .navbar.scrolled { background: var(--navy-scrolled); border-bottom-color: transparent; color: var(--white); }
+  .navbar.scrolled .logo-text { color: var(--white); }
+  .navbar.scrolled .logo-svg { stroke: var(--white); }
+  .navbar.scrolled .nav-links a { color: var(--white); }
+  .navbar.scrolled .nav-links a.active, .navbar.scrolled .nav-links a:hover { color: var(--cyan); }
+  .navbar.scrolled .hamburger { color: var(--white); }
+  
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.1rem; line-height: 1.2; text-transform: uppercase; cursor: pointer; }
+  .logo-text { color: #111827; transition: color 0.3s; }
+  .logo-svg { stroke: #111827; transition: stroke 0.3s; }
+  
+  .nav-links { display: flex; gap: 2rem; font-weight: 600; font-size: 0.95rem; }
+  .nav-links a { transition: color 0.3s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
+  
+  .btn-cyan { background: var(--cyan); color: var(--white); padding: 0.6rem 1.4rem; border-radius: 25px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; transition: background 0.3s, transform 0.3s; cursor: pointer; }
+  .btn-cyan:hover { background: #0096b8; transform: translateY(-2px); }
+  
+  .hamburger { display: none; background: none; border: none; color: #111827; font-size: 1.8rem; cursor: pointer; transition: color 0.3s; }
+  
+  .mobile-nav { position: fixed; top: 70px; left: 0; right: 0; background: var(--white); padding: 2rem 5%; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-150%); transition: transform 0.3s; z-index: 999; }
+  .mobile-nav.open { transform: translateY(0); }
+  .mobile-nav a { display: block; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: #111827; cursor: pointer; }
+  .mobile-nav .btn-cyan { display: inline-flex; margin-top: 1rem; color: var(--white); }
+
+  .page { display: none; }
+  
+  .hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: flex-start; padding: 0 5%; color: var(--white); overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1541888081622-1b156fb15494?w=1200&q=80') center/cover; z-index: -2; }
+  .hero-overlay { position: absolute; inset: 0; background: rgba(10,20,40,0.72); z-index: -1; }
+  .hero-content { max-width: 800px; z-index: 1; margin-top: -50px; }
+  .hero-label { color: var(--cyan); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .hero-title { font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero-title .cyan { color: var(--cyan); }
+  .hero-desc { max-width: 480px; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 2.5rem; font-size: 1.1rem; }
+  
+  .hero-strip { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(10,20,40,0.85); display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; padding: 2rem 5%; color: var(--white); }
+  .hero-strip-item p { font-size: 0.9rem; line-height: 1.5; color: rgba(255,255,255,0.8); margin-bottom: 1rem; }
+  .hero-strip-line { width: 28px; height: 2px; background: var(--cyan); }
+  
+  .section { padding: 6rem 5%; }
+  .bg-light { background: var(--light-bg); }
+  .bg-white { background: var(--white); }
+  .bg-navy { background: var(--navy); }
+  
+  .sec-label { color: var(--cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 1rem; }
+  .sec-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 1.5rem; }
+  .sec-title .cyan { color: var(--cyan); }
+  .sec-title.center { text-align: center; }
+  
+  .welcome-desc { font-size: 15px; color: var(--gray-text); line-height: 1.75; max-width: 600px; }
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+  
+  .leistung-card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 1.8rem; position: relative; transition: box-shadow 0.3s, transform 0.3s; }
+  .leistung-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.08); transform: translateY(-3px); }
+  .lc-num { position: absolute; top: 1.8rem; right: 1.8rem; color: #9ca3af; font-weight: 700; font-size: 1rem; }
+  .lc-icon { width: 42px; height: 42px; background: #e0f7fc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--cyan); }
+  .lc-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem; color: #111827; }
+  .lc-desc { color: var(--gray-text); font-size: 13px; line-height: 1.6; margin-bottom: 1.5rem; }
+  .lc-line { width: 28px; height: 2px; background: var(--cyan); }
+  
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--navy); padding: 2px; }
+  .photo-grid img { width: 100%; height: 200px; object-fit: cover; filter: brightness(0.85); }
+  
+  .ref-card { position: relative; height: 250px; border-radius: 12px; overflow: hidden; cursor: pointer; }
+  .ref-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .ref-card:hover img { transform: scale(1.04); }
+  .ref-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); display: flex; justify-content: space-between; align-items: flex-end; color: var(--white); }
+  .ref-name { font-weight: 700; font-size: 1.2rem; }
+  .ref-label { color: var(--cyan); font-size: 10px; font-weight: bold; text-transform: uppercase; }
+  
+  .cap-card { background: var(--dark-card); border-radius: 12px; padding: 2rem; color: var(--white); }
+  .cap-label { color: #9ca3af; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; display: block; }
+  .cap-percent { color: var(--cyan); font-size: 3.5rem; font-weight: 900; line-height: 1; margin-bottom: 1rem; display: block; }
+  .cap-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+  .cap-bar { height: 100%; background: var(--cyan); width: 0; transition: width 1.5s ease-out; }
+  .cap-desc { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
+  
+  .page-hero { height: 280px; position: relative; display: flex; align-items: flex-end; padding: 3rem 5%; color: var(--white); }
+  .page-hero.karriere-hero { height: 300px; }
+  .page-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: -2; }
+  .page-hero-overlay { position: absolute; inset: 0; z-index: -1; }
+  
+  .l-block { padding: 5rem 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .l-block.reverse { direction: rtl; }
+  .l-block.reverse > * { direction: ltr; }
+  .l-block img { width: 100%; height: 320px; object-fit: cover; border-radius: 14px; }
+  .check-list { margin: 1.5rem 0; }
+  .check-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 0.8rem; font-weight: 600; font-size: 0.95rem; color: #374151; }
+  .check-icon { width: 24px; height: 24px; background: var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 14px; font-weight: bold; }
+  
+  .job-card { background: var(--dark-card); border-radius: 12px; padding: 1.8rem 2rem; margin-bottom: 1rem; color: var(--white); display: flex; flex-direction: column; gap: 0.8rem; transition: background 0.3s; }
+  .job-card:hover { background: #243347; }
+  .job-title { font-weight: 700; font-size: 16px; }
+  .job-loc { color: #9ca3af; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+  .job-desc { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.5; }
+  
+  .contact-box { background: var(--light-bg); border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; }
+  .contact-box-title { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; color: var(--gray-text); }
+  .contact-box-val { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1.1rem; }
+  .contact-box-val svg { color: var(--cyan); width: 20px; height: 20px; }
+  
+  .form-container { border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; background: var(--white); }
+  .form-header { background: var(--cyan); color: var(--white); margin: -2.5rem -2.5rem 2rem -2.5rem; padding: 1.5rem; border-radius: 12px 12px 0 0; font-weight: 700; font-size: 1.2rem; text-align: center; }
+  .form-group { margin-bottom: 1.5rem; }
+  .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+  .form-control { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; font-family: inherit; font-size: 0.95rem; transition: border-color 0.3s; }
+  .form-control:focus { border-color: var(--cyan); outline: none; }
+  textarea.form-control { height: 120px; resize: vertical; }
+  .btn-submit { width: 100%; background: var(--cyan); color: var(--white); padding: 1rem; border-radius: 8px; font-weight: 700; font-size: 1rem; text-align: center; border: none; cursor: pointer; transition: background 0.3s; }
+  .btn-submit:hover { background: #0096b8; }
+  .success-banner { display: none; background: #10b981; color: white; padding: 1rem; border-radius: 8px; text-align: center; font-weight: 600; margin-top: 1rem; }
+  
+  .footer { background: var(--navy); padding: 4rem 5% 1.5rem; color: var(--white); }
+  .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-bottom: 3rem; }
+  .footer-logo-box { background: var(--white); border-radius: 10px; padding: 1rem; display: inline-flex; margin-bottom: 1rem; }
+  .footer-tagline { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6; }
+  .footer-col h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .f-contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .f-icon { width: 36px; height: 36px; background: var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .f-icon svg { width: 18px; height: 18px; color: var(--white); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+  .footer-bottom a { transition: color 0.3s; }
+  .footer-bottom a:hover { color: var(--white); }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-up { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) forwards; }
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+  .delay-3 { animation-delay: 0.6s; }
+  .delay-4 { animation-delay: 0.8s; }
+  
+  .reveal { opacity: 0; transform: translateY(35px); transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .reveal.from-left { transform: translateX(-35px); }
+  .reveal.from-right { transform: translateX(35px); }
+  .reveal.visible { opacity: 1; transform: none; }
+  
+  @media (max-width: 991px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .hero-title { font-size: 2.5rem; }
+    .hero-strip { grid-template-columns: 1fr 1fr; }
+    .l-block { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 5%; }
+    .l-block.reverse { direction: ltr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links, .navbar .btn-cyan { display: none; }
+    .hamburger { display: block; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .hero-strip { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="logo" onclick="showPage('home')">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-svg">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        <circle cx="12" cy="4" r="3" fill="var(--cyan)" stroke="none"></circle>
+      </svg>
+      <span class="logo-text">HD Engineering <br><span style="font-weight:600;font-size:0.8em;">& Consulting</span></span>
+    </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+      <a onclick="showPage('leistungen')" id="nav-leistungen">Leistungen</a>
+      <a onclick="showPage('karriere')" id="nav-karriere">Karriere</a>
+      <a onclick="showPage('kontakt')" id="nav-kontakt">Kontakt</a>
+    </div>
+    <button class="btn-cyan" onclick="showPage('kontakt')">Anfrage starten &rarr;</button>
+    <button class="hamburger" onclick="toggleMobileNav()">&#9776;</button>
+  </nav>
+  
+  <div class="mobile-nav" id="mobileNav">
+    <a onclick="showPage('home'); toggleMobileNav();">Home</a>
+    <a onclick="showPage('leistungen'); toggleMobileNav();">Leistungen</a>
+    <a onclick="showPage('karriere'); toggleMobileNav();">Karriere</a>
+    <a onclick="showPage('kontakt'); toggleMobileNav();">Kontakt</a>
+    <button class="btn-cyan" onclick="showPage('kontakt'); toggleMobileNav();">Anfrage starten &rarr;</button>
+  </div>
+
+  <!-- PAGE 1: HOME -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-label animate-up delay-1">Präzision entscheidet über Projekterfolg</div>
+        <h1 class="hero-title animate-up delay-2">
+          <span class="cyan">IHR PARTNER</span> FÜR<br>
+          ENGINEERING &<br>
+          CONSULTING
+        </h1>
+        <p class="hero-desc animate-up delay-3">Wir strukturieren Komplexität, übernehmen Verantwortung und führen Ingenieur- und Beratungsprojekte verlässlich zum Ziel — auf Augenhöhe mit Bauherren, Investoren und Planern.</p>
+        <div class="animate-up delay-4">
+          <button class="btn-cyan" onclick="showPage('kontakt')">Anfrage starten &rarr;</button>
+        </div>
+      </div>
+      <div class="hero-strip reveal">
+        <div class="hero-strip-item">
+          <p>Wir denken Projekte wirtschaftlich — von der ersten Kostenschätzung bis zur Schlussrechnung. Klare Budgets, saubere Steuerung.</p>
+          <div class="hero-strip-line"></div>
+        </div>
+        <div class="hero-strip-item">
+          <p>Nachvollziehbare Entscheidungen statt Blackbox. Zahlen, Termine und Risiken sind jederzeit belastbar dokumentiert.</p>
+          <div class="hero-strip-line"></div>
+        </div>
+        <div class="hero-strip-item">
+          <p>Zusagen werden eingehalten. Wir übernehmen Verantwortung für Termine, Qualität und den Gesamterfolg Ihres Projekts.</p>
+          <div class="hero-strip-line"></div>
+        </div>
+        <div class="hero-strip-item">
+          <p>Wir liefern Ergebnisse, die Bestand haben — technisch sauber, nutzungsgerecht und langfristig werthaltig.</p>
+          <div class="hero-strip-line"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section bg-white">
+      <h2 class="sec-title reveal"><span class="cyan">HERZLICH WILLKOMMEN</span><br>BEI HD ENGINEERING & CONSULTING</h2>
+      <p class="welcome-desc reveal">HD Engineering & Consulting ist ein unabhängiges Ingenieurbüro, das anspruchsvolle Bau- und Beratungsprojekte von der Konzeptphase bis zur erfolgreichen Übergabe begleitet. Wir verbinden technische Exzellenz mit kaufmännischer Klarheit — für Ergebnisse, die überzeugen.</p>
+    </div>
+    
+    <div class="section bg-light">
+      <div class="grid-2 reveal">
+        <div>
+          <div class="sec-label">LEISTUNGEN</div>
+          <h2 class="sec-title"><span class="cyan">SECHS SÄULEN</span><br>FÜR IHREN PROJEKTERFOLG</h2>
+        </div>
+        <div style="align-self: end; padding-bottom: 1.5rem; color: var(--gray-text);">
+          Von der strategischen Projektentwicklung bis zur operativen Umsetzung decken wir das gesamte Spektrum ab.
+        </div>
+      </div>
+      
+      <div class="grid-3">
+        <div class="leistung-card reveal">
+          <div class="lc-num">01</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="lc-title">Projektmanagement</div>
+          <div class="lc-desc">Strukturierte Steuerung aller Projektphasen — von der Initiierung bis zur Abnahme.</div>
+          <div class="lc-line"></div>
+        </div>
+        <div class="leistung-card reveal">
+          <div class="lc-num">02</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          </div>
+          <div class="lc-title">Bauprojektsteuerung</div>
+          <div class="lc-desc">Integrierte Steuerung aller Gewerke. Qualitätssicherung vom Rohbau bis zum Ausbau.</div>
+          <div class="lc-line"></div>
+        </div>
+        <div class="leistung-card reveal">
+          <div class="lc-num">03</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="lc-title">Controlling & Consulting</div>
+          <div class="lc-desc">Kostenbewusstsein als Haltung — klar, verbindlich, über alle Projektphasen hinweg.</div>
+          <div class="lc-line"></div>
+        </div>
+        <div class="leistung-card reveal">
+          <div class="lc-num">04</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="lc-title">Technische Due Diligence</div>
+          <div class="lc-desc">Unabhängige Expertengutachten und Bauzustandsbewertungen für Investoren und Banken.</div>
+          <div class="lc-line"></div>
+        </div>
+        <div class="leistung-card reveal">
+          <div class="lc-num">05</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3 3h4v4l3 3-3 3v4h-4l-3 3-3-3H6v-4l-3-3 3-3V5h4z"/></svg>
+          </div>
+          <div class="lc-title">Engineering Services</div>
+          <div class="lc-desc">Tragwerksplanung, TGA und Tiefbau aus einer Hand. Interdisziplinäre Fachplanung.</div>
+          <div class="lc-line"></div>
+        </div>
+        <div class="leistung-card reveal">
+          <div class="lc-num">06</div>
+          <div class="lc-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="lc-title">Kostensteuerung</div>
+          <div class="lc-desc">Transparente Kostenverfolgung, nachvollziehbare Prognosen über alle Projektphasen.</div>
+          <div class="lc-line"></div>
+        </div>
+      </div>
+      <div style="margin-top: 3rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;" class="reveal">
+        <button class="btn-cyan" onclick="showPage('leistungen')">Alle Leistungen entdecken &rarr;</button>
+        <a href="#" onclick="showPage('kontakt'); return false;" style="font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; color: #111827;">PROJEKT BESPRECHEN &nearr;</a>
+      </div>
+    </div>
+    
+    <div class="photo-grid reveal">
+      <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80" alt="Architektur">
+      <img src="https://images.unsplash.com/photo-1541888081622-1b156fb15494?w=800&q=80" alt="Baustelle">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Planung">
+      <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=800&q=80" alt="Ingenieure">
+    </div>
+    
+    <div class="section bg-white">
+      <div class="sec-label reveal">REFERENZEN</div>
+      <h2 class="sec-title reveal">Ausgewählte Projekte</h2>
+      <div class="grid-2" style="margin-top: 2rem;">
+        <div class="ref-card reveal from-left">
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="Referenz 1">
+          <div class="ref-overlay">
+            <div class="ref-name">Skyline Business Center</div>
+            <div class="ref-label">HD REFERENZ</div>
+          </div>
+        </div>
+        <div class="ref-card reveal from-right">
+          <img src="https://images.unsplash.com/photo-1574360773950-8968ba510ef7?w=800&q=80" alt="Referenz 2">
+          <div class="ref-overlay">
+            <div class="ref-name">Urban Residential Towers</div>
+            <div class="ref-label">HD REFERENZ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section bg-light">
+      <h2 class="sec-title center reveal">Aktuelle Projektkapazität</h2>
+      <div class="grid-2" style="margin-top: 3rem;">
+        <div class="cap-card reveal">
+          <span class="cap-label">AUSLASTUNG</span>
+          <span class="cap-percent" data-target="78">0 %</span>
+          <div class="cap-bar-bg">
+            <div class="cap-bar" data-width="78"></div>
+          </div>
+          <div class="cap-desc">Projektsteuerung & Bauleitung — aktuell verfügbare Kapazitäten für neue Projekte ab Q3 2026.</div>
+          <button class="btn-cyan" onclick="showPage('kontakt')">Anfrage starten &rarr;</button>
+        </div>
+        <div class="cap-card reveal">
+          <span class="cap-label">AUSLASTUNG</span>
+          <span class="cap-percent" data-target="65">0 %</span>
+          <div class="cap-bar-bg">
+            <div class="cap-bar" data-width="65"></div>
+          </div>
+          <div class="cap-desc">Technische Beratung & Gutachten — Kapazitäten für Beratungsmandate und Due-Diligence-Aufträge.</div>
+          <button class="btn-cyan" onclick="showPage('kontakt')">Anfrage starten &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: LEISTUNGEN -->
+  <div id="page-leistungen" class="page">
+    <div class="page-hero">
+      <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80');"></div>
+      <div class="page-hero-overlay"></div>
+      <div style="position: relative; z-index: 1;">
+        <div class="hero-label">LEISTUNGEN</div>
+        <h1 class="sec-title" style="margin-bottom: 0;">Sechs Säulen für Ihren Projekterfolg</h1>
+      </div>
+    </div>
+    
+    <div class="section bg-light">
+      <div class="grid-2">
+        <div class="reveal from-left">
+          <h2 class="sec-title">Expertise, die<br><span class="cyan">Werte schafft.</span></h2>
+          <p class="welcome-desc" style="margin-bottom: 2rem;">Wir decken den gesamten Lebenszyklus einer Immobilie ab — mit klarer Spezialisierung auf Projektsteuerung, Engineering und strategische Beratung.</p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+          </div>
+        </div>
+        <div class="grid-2 reveal from-right" style="gap: 1.5rem;">
+          <!-- Mini cards -->
+          <div class="leistung-card" style="padding: 1.2rem;">
+            <div class="lc-icon" style="width: 32px; height: 32px; margin-bottom: 1rem;"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="lc-title" style="font-size: 0.95rem;">Projektmanagement</div>
+            <div class="lc-line" style="margin-top: 1rem;"></div>
+          </div>
+          <div class="leistung-card" style="padding: 1.2rem;">
+            <div class="lc-icon" style="width: 32px; height: 32px; margin-bottom: 1rem;"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <div class="lc-title" style="font-size: 0.95rem;">Bauprojektsteuerung</div>
+            <div class="lc-line" style="margin-top: 1rem;"></div>
+          </div>
+          <div class="leistung-card" style="padding: 1.2rem;">
+            <div class="lc-icon" style="width: 32px; height: 32px; margin-bottom: 1rem;"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <div class="lc-title" style="font-size: 0.95rem;">Due Diligence</div>
+            <div class="lc-line" style="margin-top: 1rem;"></div>
+          </div>
+          <div class="leistung-card" style="padding: 1.2rem;">
+            <div class="lc-icon" style="width: 32px; height: 32px; margin-bottom: 1rem;"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="lc-title" style="font-size: 0.95rem;">Kostensteuerung</div>
+            <div class="lc-line" style="margin-top: 1rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 6 Blöcke -->
+    <div class="l-block bg-white">
+      <div class="reveal from-left">
+        <div class="sec-label">LEISTUNG 01</div>
+        <h2 class="sec-title">PROJEKTMANAGEMENT &mdash;<br><span class="cyan">VERANTWORTUNG AUS EINER HAND</span></h2>
+        <p class="welcome-desc">Wir übernehmen die ganzheitliche Leitung Ihres Projekts. Wir definieren Ziele, strukturieren Prozesse und führen alle Projektbeteiligten fokussiert zum Erfolg.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Terminplanung</li>
+          <li><div class="check-icon">&#10003;</div> Budgetcontrolling</li>
+          <li><div class="check-icon">&#10003;</div> Qualitätssicherung</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-right">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Planung">
+      </div>
+    </div>
+    
+    <div class="l-block bg-light reverse">
+      <div class="reveal from-right">
+        <div class="sec-label">LEISTUNG 02</div>
+        <h2 class="sec-title">BAUPROJEKTSTEUERUNG &mdash;<br><span class="cyan">VOM ROHBAU ZUM AUSBAU</span></h2>
+        <p class="welcome-desc">Mit starker Präsenz auf der Baustelle koordinieren wir die Ausführung. Wir greifen aktiv ein, wenn es hakt, und sorgen für einen reibungslosen Bauablauf.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Gewerkesteuerung</li>
+          <li><div class="check-icon">&#10003;</div> Qualitätssicherung</li>
+          <li><div class="check-icon">&#10003;</div> Schlüsselfertige Übergabe</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-left">
+        <img src="https://images.unsplash.com/photo-1541888081622-1b156fb15494?w=800&q=80" alt="Baustelle">
+      </div>
+    </div>
+    
+    <div class="l-block bg-white">
+      <div class="reveal from-left">
+        <div class="sec-label">LEISTUNG 03</div>
+        <h2 class="sec-title"><span class="cyan">CONTROLLING & CONSULTING</span></h2>
+        <p class="welcome-desc">Fundierte kaufmännische Begleitung für technische Projekte. Wir verknüpfen Zahlen mit Baufortschritt und sichern die Wirtschaftlichkeit.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Kostenverfolgung</li>
+          <li><div class="check-icon">&#10003;</div> Kaufmännische Schnittstellen</li>
+          <li><div class="check-icon">&#10003;</div> Strategische Beratung</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-right">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Consulting">
+      </div>
+    </div>
+    
+    <div class="l-block bg-light reverse">
+      <div class="reveal from-right">
+        <div class="sec-label">LEISTUNG 04</div>
+        <h2 class="sec-title">TECHNISCHE<br><span class="cyan">DUE DILIGENCE</span></h2>
+        <p class="welcome-desc">Verlässliche Fakten für Ihre Investitionsentscheidungen. Wir analysieren Substanz, Technik und Risiken von Bestandsgebäuden und Neubauprojekten.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Bauzustandsbewertungen</li>
+          <li><div class="check-icon">&#10003;</div> Risikoanalyse</li>
+          <li><div class="check-icon">&#10003;</div> Portfoliostrategie</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-left">
+        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="Gebäude">
+      </div>
+    </div>
+    
+    <div class="l-block bg-white">
+      <div class="reveal from-left">
+        <div class="sec-label">LEISTUNG 05</div>
+        <h2 class="sec-title"><span class="cyan">ENGINEERING SERVICES</span></h2>
+        <p class="welcome-desc">Kreative und belastbare Fachplanung aus einer Hand. Unsere Ingenieure entwerfen effiziente Systeme für Struktur und Gebäudetechnik.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Tragwerksplanung</li>
+          <li><div class="check-icon">&#10003;</div> TGA (HVAC/Sanitär/Elektro)</li>
+          <li><div class="check-icon">&#10003;</div> Tiefbau & Infrastruktur</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-right">
+        <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=800&q=80" alt="Ingenieure">
+      </div>
+    </div>
+    
+    <div class="l-block bg-light reverse">
+      <div class="reveal from-right">
+        <div class="sec-label">LEISTUNG 06</div>
+        <h2 class="sec-title">KOSTENSTEUERUNG &mdash;<br><span class="cyan">KLARHEIT ÜBER ALLE PHASEN</span></h2>
+        <p class="welcome-desc">Keine bösen Überraschungen. Wir steuern Budgets aktiv, prüfen Nachträge konsequent und liefern transparente Auswertungen zu jedem Zeitpunkt.</p>
+        <ul class="check-list">
+          <li><div class="check-icon">&#10003;</div> Kostenplanung DIN 276</li>
+          <li><div class="check-icon">&#10003;</div> Nachvollziehbare Prognosen</li>
+          <li><div class="check-icon">&#10003;</div> Wirtschaftliche Zielsicherung</li>
+        </ul>
+        <button class="btn-cyan" style="margin-top: 1rem;" onclick="showPage('kontakt')">Projekt besprechen &rarr;</button>
+      </div>
+      <div class="reveal from-left">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="Kalkulation">
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: KARRIERE -->
+  <div id="page-karriere" class="page">
+    <div class="page-hero karriere-hero">
+      <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=1200&q=80');"></div>
+      <div class="page-hero-overlay" style="background: rgba(10,20,40,0.65);"></div>
+      <div style="position: relative; z-index: 1;">
+        <div class="hero-label">KARRIERE</div>
+        <h1 class="sec-title" style="margin-bottom: 0;">Arbeiten bei HD Engineering & Consulting</h1>
+      </div>
+    </div>
+    
+    <div class="section bg-white">
+      <div style="max-width: 800px; margin: 0 auto;" class="reveal">
+        <div class="sec-label">STELLENANGEBOTE</div>
+        <h2 class="sec-title" style="margin-bottom: 3rem;">Werden Sie Teil<br>unseres <span class="cyan">Teams.</span></h2>
+        
+        <div class="job-card">
+          <div class="job-title">Bauleiter (m/w/d)</div>
+          <div class="job-loc">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            Pforzheim, Deutschland
+          </div>
+          <div class="job-desc">Operative Bausteuerung, Qualitätssicherung und Schnittstellenmanagement direkt vor Ort.</div>
+          <div style="margin-top: 0.5rem;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Jetzt bewerben &rarr;</button>
+          </div>
+        </div>
+        
+        <div class="job-card">
+          <div class="job-title">Construction Manager (m/w/d)</div>
+          <div class="job-loc">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            Pforzheim, Deutschland
+          </div>
+          <div class="job-desc">Operative Bausteuerung, Qualitätssicherung und Schnittstellenmanagement direkt vor Ort.</div>
+          <div style="margin-top: 0.5rem;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Jetzt bewerben &rarr;</button>
+          </div>
+        </div>
+        
+        <div class="job-card">
+          <div class="job-title">Office / Administration (m/w/d)</div>
+          <div class="job-loc">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            Pforzheim, Deutschland
+          </div>
+          <div class="job-desc">Organisatorisches Rückgrat unseres Teams — Projektassistenz, Dokumentation und Büroorganisation.</div>
+          <div style="margin-top: 0.5rem;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Jetzt bewerben &rarr;</button>
+          </div>
+        </div>
+        
+        <div class="job-card">
+          <div class="job-title">Projektleiter Engineering (m/w/d)</div>
+          <div class="job-loc">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            München, Deutschland
+          </div>
+          <div class="job-desc">Verantwortungsvolle Leitung von Ingenieurprojekten von der Planung bis zur Umsetzung.</div>
+          <div style="margin-top: 0.5rem;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Jetzt bewerben &rarr;</button>
+          </div>
+        </div>
+        
+        <div class="job-card">
+          <div class="job-title">Technischer Berater (m/w/d)</div>
+          <div class="job-loc">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+            Remote möglich
+          </div>
+          <div class="job-desc">Unabhängige Fachberatung und Gutachtertätigkeit für anspruchsvolle Projekte.</div>
+          <div style="margin-top: 0.5rem;">
+            <button class="btn-cyan" onclick="showPage('kontakt')">Jetzt bewerben &rarr;</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: KONTAKT -->
+  <div id="page-kontakt" class="page" style="padding-top: 120px; padding-bottom: 6rem;">
+    <div style="padding: 0 5%; max-width: 1200px; margin: 0 auto;" class="grid-2">
+      <div class="reveal from-left">
+        <div class="sec-label">KONTAKT</div>
+        <h2 class="sec-title"><span class="cyan">Anfrage</span><br>stellen</h2>
+        <p class="welcome-desc" style="margin-bottom: 1rem;">Teilen Sie uns Ihre Anforderungen mit, ob Einzelprojekt oder Portfolio, ob strategisch oder operativ. Unser Team prüft Ihre Anfrage persönlich und antwortet innerhalb eines Werktages mit einer ersten strukturierten Einschätzung.</p>
+        <p class="welcome-desc">Gerne dürfen Sie bereits Pläne, Exposés oder Projektunterlagen anhängen — je mehr wir vorab wissen, desto präziser fällt unsere Rückmeldung aus.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
+          <div class="contact-box">
+            <div class="contact-box-title">Telefon</div>
+            <div class="contact-box-val">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +49 89 123 456 78
+            </div>
+          </div>
+          <div class="contact-box">
+            <div class="contact-box-title">E-Mail</div>
+            <div class="contact-box-val">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              info@hd-engineering.de
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reveal from-right">
+        <div class="form-container">
+          <div class="form-header">Jetzt Anfrage stellen</div>
+          <form id="contactForm" onsubmit="submitForm(event)">
+            <div class="form-group">
+              <label>Ihr Name *</label>
+              <input type="text" class="form-control" placeholder="Max Mustermann" required>
+            </div>
+            <div class="form-group">
+              <label>Wie lautet Ihre Firma?</label>
+              <input type="text" class="form-control" placeholder="Mustermann GmbH">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label>E-Mail *</label>
+                <input type="email" class="form-control" placeholder="max@example.com" required>
+              </div>
+              <div class="form-group">
+                <label>Telefonnummer</label>
+                <input type="text" class="form-control" placeholder="0123 456789">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ihre Anfrage *</label>
+              <textarea class="form-control" placeholder="Was können wir für Sie tun? Projektart, Standort, Zeitrahmen" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Nachricht senden</button>
+            <div id="successBanner" class="success-banner">Vielen Dank! Wir melden uns innerhalb eines Werktages.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            <circle cx="12" cy="4" r="3" fill="var(--cyan)" stroke="none"></circle>
+          </svg>
+          <span style="color:#111827; font-weight:900; margin-left:10px; line-height:1.2; text-transform:uppercase;">HD Engineering <br><span style="font-weight:600;font-size:0.8em;">& Consulting</span></span>
+        </div>
+        <p class="footer-tagline">Verantwortung entscheidet über Projekterfolg. Ihr Partner für Engineering und Consulting.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Kontakt</h4>
+        <div class="f-contact-item">
+          <div class="f-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <span>+49 89 123 456 78</span>
+        </div>
+        <div class="f-contact-item">
+          <div class="f-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <span>info@hd-engineering.de</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Firmenanschrift</h4>
+        <div class="f-contact-item" style="align-items:flex-start;">
+          <div class="f-icon" style="flex-shrink:0;">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span style="line-height:1.6;">HD Engineering & Consulting GmbH<br>Musterstraße 12<br>80331 München</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 HD Engineering & Consulting GmbH</span>
+      <div style="display:flex; gap:15px;">
+        <a href="#">Impressum</a>
+        <span>|</span>
+        <a href="#">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation logic
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById('page-' + id).style.display = 'block';
+      window.scrollTo(0, 0);
+      
+      const nav = document.getElementById('navbar');
+      if (window.scrollY <= 50) nav.classList.remove('scrolled');
+      
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      const activeLink = document.getElementById('nav-' + id);
+      if(activeLink) activeLink.classList.add('active');
+      
+      setTimeout(() => initReveal(), 100);
+    }
+    
+    // Mobile Nav Toggle
+    function toggleMobileNav() {
+      document.getElementById('mobileNav').classList.toggle('open');
+    }
+
+    // Scroll Navbar
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    // Reveal Animations & CountUp
+    let observer;
+    function initReveal() {
+      if(observer) observer.disconnect();
+      
+      document.querySelectorAll('.reveal').forEach(el => {
+        el.classList.remove('visible');
+        el.style.transitionDelay = '0s';
+      });
+      
+      document.querySelectorAll('.cap-percent').forEach(el => {
+        el.textContent = '0 %';
+        el.classList.remove('counted');
+      });
+      document.querySelectorAll('.cap-bar').forEach(el => {
+        el.style.width = '0%';
+      });
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            entry.target.style.transitionDelay = (i * 0.12) + 's';
+            entry.target.classList.add('visible');
+            
+            // Trigger CountUp if it's a cap-card
+            const percentEl = entry.target.querySelector('.cap-percent');
+            if(percentEl && !percentEl.classList.contains('counted')) {
+              percentEl.classList.add('counted');
+              const target = parseInt(percentEl.getAttribute('data-target'));
+              countUp(percentEl, target);
+              
+              const barEl = entry.target.querySelector('.cap-bar');
+              if(barEl) barEl.style.width = target + '%';
+            }
+          }
+        });
+      }, { threshold: 0.12 });
+      
+      setTimeout(() => {
+        document.querySelectorAll('.page.active .reveal').forEach(el => observer.observe(el));
+      }, 50);
+    }
+
+    function countUp(el, target) {
+      let val = 0;
+      const step = target / 80;
+      const timer = setInterval(() => {
+        val = Math.min(val + step, target);
+        el.textContent = Math.floor(val) + ' %';
+        if (val >= target) clearInterval(timer);
+      }, 16);
+    }
+
+    // Form submission
+    function submitForm(e) {
+      e.preventDefault();
+      const banner = document.getElementById('successBanner');
+      banner.style.display = 'block';
+      e.target.reset();
+      setTimeout(() => {
+        banner.style.display = 'none';
+      }, 5000);
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      initReveal();
+    });
+  </script>
+</body>
+</html>
