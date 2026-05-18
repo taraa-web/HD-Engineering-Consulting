@@ -8,6 +8,4 @@
   <!-- "& CONSULTING" -->
   <text x="22" y="235" font-family="'Inter', Arial, sans-serif" font-weight="500" font-size="32" fill="#26415E" letter-spacing="2">&amp; CONSULTING</text>
   
-  <!-- Vertical line on the right -->
-  <line x1="340" y1="30" x2="340" y2="260" stroke="#26415E" stroke-width="3" />
 </svg>

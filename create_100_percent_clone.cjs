@@ -46,6 +46,7 @@ jsx = jsx.replace(/style="([^"]*)"/g, (match, styleString) => {
 
 // React component wrapper with IntersectionObserver
 const appComponent = `import React, { useEffect } from 'react';
+import CookieConsent from './components/CookieConsent';
 import './index.css';
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
 
     return (
         <div className="font-sans antialiased text-foreground">
+            <CookieConsent />
             ${jsx}
         </div>
     );
