@@ -82,18 +82,24 @@ const css = `
 
 /* Detailed View Tabs */
 .bc-tabs-row {
-  display: flex; border-bottom: 2px solid transparent; margin-bottom: 16px;
-  overflow-x: auto;
+  display: flex; align-items: center; border-bottom: 1px solid #e2e8f0; padding-top: 16px; margin-bottom: 20px;
 }
 .bc-tab-btn {
-  min-width: 160px; padding: 12px 20px; font-size: 14px; font-weight: 600;
+  margin-right: 32px; padding-bottom: 16px; font-size: 14.5px; font-weight: 700;
   border: none; background: transparent; cursor: pointer; color: #475569;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent; margin-bottom: -1px;
 }
 .bc-tab-btn.active {
-  background-color: #2f67db; color: #ffffff; border-bottom-color: #2f67db;
+  color: #0f172a; border-bottom-color: #2563eb;
 }
-.bc-tab-btn:not(.active):hover { background-color: #f8fafc; }
+.bc-tab-btn:hover:not(.active) { color: #0f172a; }
+
+.bc-tab-btn-blue {
+  background-color: #2563eb; color: #ffffff; padding: 8px 20px;
+  border-radius: 4px; font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+  margin-bottom: 16px; transition: background 0.2s;
+}
+.bc-tab-btn-blue:hover { background-color: #1d4ed8; }
 
 /* Quick Actions */
 .bc-quick-actions {
@@ -101,22 +107,22 @@ const css = `
 }
 .bc-btn-dark {
   background-color: #0f172a; color: #ffffff; padding: 8px 16px;
-  border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+  border-radius: 4px; font-size: 13px; font-weight: 700; border: none; cursor: pointer;
 }
 .bc-btn-dark:hover { background-color: #000000; }
 
 /* Cards */
 .bc-card {
-  background-color: #f8fafc; border: 1px solid #e2e8f0;
-  border-radius: 8px; padding: 16px 20px; margin-bottom: 12px;
+  background-color: transparent; border: none;
+  padding: 8px 0; margin-bottom: 16px;
 }
 .bc-card-header {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
 }
-.bc-card-title { font-size: 15px; font-weight: 700; color: #0f172a; }
+.bc-card-title { font-size: 17px; font-weight: 700; color: #0f172a; }
 .bc-card-badge {
-  background-color: #dcfce7; color: #166534; font-size: 12px; font-weight: 600;
-  padding: 2px 10px; border-radius: 9999px; margin-left: auto;
+  background-color: #dcfce7; color: #166534; font-size: 12px; font-weight: 700;
+  padding: 4px 14px; border-radius: 9999px;
 }
 
 /* Switches inside cards */
@@ -141,17 +147,17 @@ const css = `
   display: flex; justify-content: space-between; gap: 12px; margin-top: 24px;
 }
 .bc-btn-inline {
-  flex: 1; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
-  background-color: #2f67db; color: #ffffff; border: none; cursor: pointer; text-align: center;
+  flex: 1; padding: 12px 16px; border-radius: 4px; font-size: 14.5px; font-weight: 700;
+  background-color: #2563eb; color: #ffffff; border: none; cursor: pointer; text-align: center;
 }
 .bc-btn-inline:hover { background-color: #1d4ed8; }
 
 /* Modal Footer Base */
 .bc-footer {
-  background-color: #f8fafc; padding: 12px 24px;
+  background-color: #ffffff; padding: 16px 24px;
   border-top: 1px solid #e2e8f0;
-  display: flex; justify-content: center; align-items: center; gap: 8px;
-  font-size: 12px; color: #6b7280;
+  display: flex; justify-content: center; align-items: center; gap: 24px;
+  font-size: 13.5px; color: #64748b;
 }
 
 .bc-hidden { display: none !important; }
@@ -168,15 +174,15 @@ const html = `
 <div id="bc-modal-overlay" class="bc-modal-overlay bc-hidden">
   <div class="bc-modal">
     <div class="bc-header">
-      <svg class="bc-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        <path d="M9 12l2 2 4-4"></path>
+      <svg class="bc-header-icon" viewBox="0 0 24 24" fill="#3b82f6" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 00-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08zm3.094 8.016a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
       </svg>
       <h2>Datenschutz-Präferenz</h2>
       <button class="bc-close" onclick="bcClose()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
+    <div style="height:1px; width:100%; background-color:#e2e8f0;"></div>
     
     <div class="bc-body" id="bc-body-scroll">
       <!-- INITIAL VIEW (Screenshot 1) -->
@@ -195,13 +201,15 @@ const html = `
       
       <!-- DETAILED VIEW (Screenshot 3) -->
       <div id="bc-view-details" class="bc-hidden">
-        <p class="bc-text" style="color: #4b5563;">Hier finden Sie eine Übersicht über alle verwendeten Cookies. Sie können Ihre Einwilligung für ganze Kategorien geben oder sich weitere Informationen anzeigen lassen.</p>
+        <p class="bc-text" style="color: #475569; margin-top: 16px;">Hier finden Sie eine Übersicht über alle verwendeten Cookies. Sie können Ihre Einwilligung für ganze Kategorien geben oder sich weitere Informationen anzeigen lassen.</p>
         
+        <div style="height:1px; width:100%; background-color:#e2e8f0; margin-bottom: 0;"></div>
+
         <div class="bc-tabs-row">
           <button class="bc-tab-btn active">Service-Gruppen</button>
           <button class="bc-tab-btn">Services</button>
           <button class="bc-tab-btn">Provider</button>
-          <button class="bc-tab-btn">Einwilligung-Historie</button>
+          <button class="bc-tab-btn-blue">Einwilligung-Historie</button>
         </div>
         
         <div class="bc-quick-actions">
@@ -211,25 +219,10 @@ const html = `
         
         <div class="bc-card">
           <div class="bc-card-header">
-             <label class="bc-switch">
-                <input type="checkbox" checked disabled>
-                <span class="bc-slider"></span>
-             </label>
              <span class="bc-card-title">Essenziell</span>
              <span class="bc-card-badge">Aktiv</span>
           </div>
-          <p class="bc-text" style="font-size: 13px; color: #475569; margin: 0;">Essenzielle Services ermöglichen grundlegende Funktionen und sind für die einwandfreie Funktion der Website zwingend erforderlich.</p>
-        </div>
-        
-        <div class="bc-card">
-          <div class="bc-card-header">
-             <label class="bc-switch">
-                <input type="checkbox" id="bc-marketing-checkbox">
-                <span class="bc-slider"></span>
-             </label>
-             <span class="bc-card-title">Marketing</span>
-          </div>
-          <p class="bc-text" style="font-size: 13px; color: #475569; margin: 0;">Marketing-Cookies werden von Drittanbietern oder Publishern verwendet, um personalisierte Werbung anzuzeigen. Sie tun dies, indem sie Besucher über Websites hinweg verfolgen.</p>
+          <p class="bc-text" style="font-size: 14.5px; color: #475569; margin: 0;">Essenzielle Services ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.</p>
         </div>
         
         <div class="bc-inline-buttons">
@@ -241,10 +234,12 @@ const html = `
       
     </div>
     
+    <div style="height:1px; width:100%; background-color:#e2e8f0;"></div>
     <div class="bc-footer">
-      <span>Präferenzen |</span>
-      <span style="display:flex; align-items:center; gap: 4px;">
-        ⚙️ Borlabs Cookie
+      <span style="cursor: pointer;">Präferenzen</span>
+      <span style="display:flex; align-items:center; gap: 4px; cursor: pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        Borlabs Cookie
       </span>
     </div>
   </div>

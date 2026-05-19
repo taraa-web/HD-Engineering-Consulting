@@ -44,14 +44,14 @@ export default function CookieConsent() {
         setIsOpen(false);
     };
 
-    if (!isOpen && !consentGiven) return null;
+    // Removed early return so the fingerprint is always rendered
 
     return (
         <div className="font-sans">
             {/* Borlabs Fingerprint Button - Exact Image from Vercel */}
             <button 
                 onClick={() => setIsOpen(true)}
-                className={`fixed bottom-5 left-4 z-[60] inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1f6fe5] text-white shadow-[0_14px_30px_-14px_rgba(31,111,229,0.8)] transition hover:scale-105 hover:bg-[#195fca] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f6fe5] sm:bottom-6 sm:left-6 ${isOpen ? 'hidden' : ''}`}
+                className={`fixed bottom-5 left-4 z-[2147483647] inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1f6fe5] text-white shadow-[0_14px_30px_-14px_rgba(31,111,229,0.8)] transition hover:scale-105 hover:bg-[#195fca] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f6fe5] sm:bottom-6 sm:left-6`}
                 aria-label="Datenschutz-Präferenzen öffnen"
             >
                 <img src="https://hek-praezisionstechnik.de/wp-content/plugins/borlabs-cookie/assets/images/borlabs-cookie-widget-b.svg#main" alt="Datenschutz Fingerabdruck" className="h-9 w-9 object-contain" />
@@ -59,14 +59,16 @@ export default function CookieConsent() {
 
             {/* Modal Overlay */}
             {isOpen && (
-                <div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]">
+                <div className="fixed inset-0 z-[2147483647] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]">
                     <div className="relative max-h-[95vh] w-full max-w-[850px] flex flex-col overflow-hidden rounded-[8px] bg-white shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)]">
                         
                         {/* Header */}
-                        <div className="flex items-center justify-between px-6 py-4">
+                        <div className="flex items-center justify-between px-6 py-5">
                             <div className="flex items-center gap-3">
-                                <ShieldCheck className="h-7 w-7 text-[#2563eb]" strokeWidth={2.5} />
-                                <h2 className="m-0 text-[26px] font-bold text-[#0f172a] tracking-tight">Datenschutz-Präferenz</h2>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3b82f6" className="h-8 w-8">
+                                  <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 00-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08zm3.094 8.016a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                                </svg>
+                                <h2 className="m-0 text-[24px] font-bold text-[#0f172a] tracking-tight">Datenschutz-Präferenz</h2>
                             </div>
                             <button 
                                 onClick={closeMenu}
@@ -78,7 +80,7 @@ export default function CookieConsent() {
                         <div className="h-px w-full bg-slate-200"></div>
 
                         {/* Body Container */}
-                        <div className="flex-1 overflow-y-auto bg-white">
+                        <div className="w-full bg-white">
                             {/* Intro Text */}
                             <div className="px-6 py-5">
                                 <p className="m-0 text-[15px] leading-relaxed text-[#475569]">
@@ -88,44 +90,32 @@ export default function CookieConsent() {
                             <div className="h-px w-full bg-slate-200"></div>
 
                             {/* Tabs Row */}
-                            <div className="flex flex-wrap items-center gap-1 px-6 py-2">
-                                <button onClick={() => setActiveTab('groups')} className={`px-5 py-2.5 text-[14.5px] font-bold transition-colors ${activeTab === 'groups' ? 'bg-[#2563eb] text-white' : 'text-[#475569] hover:text-[#0f172a]'}`}>Service-Gruppen</button>
-                                <button onClick={() => setActiveTab('services')} className={`px-5 py-2.5 text-[14.5px] font-bold transition-colors ${activeTab === 'services' ? 'bg-[#2563eb] text-white' : 'text-[#475569] hover:text-[#0f172a]'}`}>Services</button>
-                                <button onClick={() => setActiveTab('provider')} className={`px-5 py-2.5 text-[14.5px] font-bold transition-colors ${activeTab === 'provider' ? 'bg-[#2563eb] text-white' : 'text-[#475569] hover:text-[#0f172a]'}`}>Provider</button>
-                                <button onClick={() => setActiveTab('history')} className={`px-5 py-2.5 text-[14.5px] font-bold transition-colors ${activeTab === 'history' ? 'bg-[#2563eb] text-white' : 'text-[#475569] hover:text-[#0f172a]'}`}>Einwilligung-Historie</button>
+                            <div className="flex flex-wrap items-center px-6 pt-4 border-b border-slate-200">
+                                <button onClick={() => setActiveTab('groups')} className={`mr-8 pb-4 text-[14.5px] font-bold transition-colors border-b-[3px] -mb-px ${activeTab === 'groups' ? 'border-[#2563eb] text-[#0f172a]' : 'border-transparent text-[#475569] hover:text-[#0f172a]'}`}>Service-Gruppen</button>
+                                <button onClick={() => setActiveTab('services')} className={`mr-8 pb-4 text-[14.5px] font-bold transition-colors border-b-[3px] -mb-px ${activeTab === 'services' ? 'border-[#2563eb] text-[#0f172a]' : 'border-transparent text-[#475569] hover:text-[#0f172a]'}`}>Services</button>
+                                <button onClick={() => setActiveTab('provider')} className={`mr-8 pb-4 text-[14.5px] font-bold transition-colors border-b-[3px] -mb-px ${activeTab === 'provider' ? 'border-[#2563eb] text-[#0f172a]' : 'border-transparent text-[#475569] hover:text-[#0f172a]'}`}>Provider</button>
+                                <div className="pb-4 -mb-px flex items-center">
+                                    <button onClick={() => setActiveTab('history')} className={`px-5 py-2 text-[14px] font-bold transition-colors rounded-[4px] ${activeTab === 'history' ? 'bg-[#2563eb] text-white' : 'bg-[#2563eb] text-white hover:bg-[#1d4ed8]'}`}>Einwilligung-Historie</button>
+                                </div>
                             </div>
-                            <div className="h-px w-full bg-slate-200"></div>
 
                             {/* Main Content Area */}
                             <div className="px-6 py-5">
                                 {/* Select All Actions */}
-                                <div className="mb-4 flex justify-end gap-3">
-                                    <button onClick={() => setMarketingChecked(true)} className="rounded-[4px] bg-[#0f172a] px-5 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-black">Alle auswählen</button>
-                                    <button onClick={() => setMarketingChecked(false)} className="rounded-[4px] bg-[#0f172a] px-5 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-black">Alle abwählen</button>
+                                <div className="mb-4 flex justify-end gap-2">
+                                    <button onClick={() => setMarketingChecked(true)} className="rounded-[4px] bg-[#0f172a] px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-black">Alle auswählen</button>
+                                    <button onClick={() => setMarketingChecked(false)} className="rounded-[4px] bg-[#0f172a] px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-black">Alle abwählen</button>
                                 </div>
 
                                 {/* TAB CONTENT: Service-Gruppen */}
                                 {activeTab === 'groups' && (
                                     <>
-                                        <div className="mb-4 rounded-[6px] border border-slate-200 bg-[#f8fafc] px-6 py-5">
+                                        <div className="mb-4 bg-transparent px-0 py-2">
                                             <div className="mb-3 flex items-center justify-between">
                                                 <span className="text-[17px] font-bold text-[#0f172a]">Essenziell</span>
-                                                <span className="rounded-full bg-[#dcfce7] px-3.5 py-1 text-[13px] font-bold text-[#166534]">Aktiv</span>
+                                                <span className="rounded-full bg-[#dcfce7] px-3.5 py-1 text-[12px] font-bold text-[#166534]">Aktiv</span>
                                             </div>
-                                            <p className="m-0 text-[15px] leading-relaxed text-[#475569]">Essenzielle Services ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.</p>
-                                        </div>
-
-                                        <div className="mb-4 rounded-[6px] border border-slate-200 bg-[#f8fafc] px-6 py-5">
-                                            <div className="mb-3 flex items-center justify-between">
-                                                <span className="text-[17px] font-bold text-[#0f172a]">Marketing</span>
-                                                <div 
-                                                    onClick={() => setMarketingChecked(!marketingChecked)}
-                                                    className={`relative inline-block h-[24px] w-[44px] cursor-pointer rounded-full transition-colors duration-300 ${marketingChecked ? 'bg-[#10b981]' : 'bg-[#cbd5e1]'}`}
-                                                >
-                                                    <div className={`absolute bottom-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-sm transition-transform duration-300 ${marketingChecked ? 'translate-x-[23px]' : 'translate-x-[3px]'}`}></div>
-                                                </div>
-                                            </div>
-                                            <p className="m-0 text-[15px] leading-relaxed text-[#475569]">Marketing-Cookies werden von Drittanbietern oder Publishern verwendet, um personalisierte Werbung anzuzeigen. Sie tun dies, indem sie Besucher über Websites hinweg verfolgen.</p>
+                                            <p className="m-0 text-[14.5px] leading-relaxed text-[#475569]">Essenzielle Services ermöglichen grundlegende Funktionen und sind für das ordnungsgemäße Funktionieren der Website erforderlich.</p>
                                         </div>
                                     </>
                                 )}
@@ -169,36 +159,6 @@ export default function CookieConsent() {
                                                         </td>
                                                     </tr>
                                                 )}
-                                                <tr className="cursor-pointer border-b border-slate-200 hover:bg-slate-50" onClick={() => setExpandedService(expandedService === 'ga' ? null : 'ga')}>
-                                                    <td className="px-5 py-4 font-semibold text-[#2563eb] flex items-center gap-2">
-                                                        {expandedService === 'ga' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />} Google Analytics
-                                                    </td>
-                                                    <td className="px-5 py-4 text-[#475569]">Marketing</td>
-                                                    <td className="px-5 py-4">
-                                                        <div 
-                                                            onClick={(e) => { e.stopPropagation(); setMarketingChecked(!marketingChecked); }}
-                                                            className={`relative inline-block h-[22px] w-[42px] cursor-pointer rounded-full transition-colors duration-300 ${marketingChecked ? 'bg-[#10b981]' : 'bg-[#cbd5e1]'}`}
-                                                        >
-                                                            <div className={`absolute bottom-[3px] h-4 w-4 rounded-full bg-white transition-transform duration-300 ${marketingChecked ? 'translate-x-[23px]' : 'translate-x-[3px]'}`}></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                {expandedService === 'ga' && (
-                                                    <tr className="bg-[#f8fafc]">
-                                                        <td colSpan="3" className="p-0">
-                                                            <table className="w-full text-[14px] text-[#334155]">
-                                                                <tbody>
-                                                                    <tr className="border-b border-slate-100"><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Name</td><td className="px-8 py-3.5 font-medium">Google Analytics</td></tr>
-                                                                    <tr className="border-b border-slate-100"><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Anbieter</td><td className="px-8 py-3.5">Google LLC</td></tr>
-                                                                    <tr className="border-b border-slate-100"><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Zweck</td><td className="px-8 py-3.5">Cookie von Google für Website-Analysen. Erzeugt statistische Daten darüber, wie der Besucher die Website nutzt.</td></tr>
-                                                                    <tr className="border-b border-slate-100"><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Datenschutzerklärung</td><td className="px-8 py-3.5"><a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer" className="text-[#2563eb] hover:underline">Link</a></td></tr>
-                                                                    <tr className="border-b border-slate-100"><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Host(s)</td><td className="px-8 py-3.5">google.com</td></tr>
-                                                                    <tr><td className="px-8 py-3.5 font-bold text-[#64748b] w-1/3">Cookie Name & Laufzeit</td><td className="px-8 py-3.5 font-mono text-[13px]">_ga (2 Jahre), _gid (1 Tag)</td></tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                )}
                                             </tbody>
                                         </table>
                                     </div>
@@ -235,17 +195,17 @@ export default function CookieConsent() {
                             <div className="h-px w-full bg-slate-200"></div>
 
                             {/* Three Side-by-side Blue Buttons */}
-                            <div className="px-6 py-5 flex flex-col gap-4 sm:flex-row">
-                                <button onClick={handleSave} className="flex-1 rounded-[6px] bg-[#2563eb] py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Speichern</button>
-                                <button onClick={handleAcceptAll} className="flex-1 rounded-[6px] bg-[#2563eb] py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Alle akzeptieren</button>
-                                <button onClick={handleAcceptEssential} className="flex-1 rounded-[6px] bg-[#2563eb] py-3.5 text-[15px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Nur essenzielle Cookies akzeptieren</button>
+                            <div className="px-6 py-5 flex flex-col gap-3 sm:flex-row">
+                                <button onClick={handleSave} className="flex-1 rounded-[4px] bg-[#2563eb] py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Speichern</button>
+                                <button onClick={handleAcceptAll} className="flex-1 rounded-[4px] bg-[#2563eb] py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Alle akzeptieren</button>
+                                <button onClick={handleAcceptEssential} className="flex-1 rounded-[4px] bg-[#2563eb] py-3 text-[14.5px] font-bold text-white transition-colors hover:bg-[#1d4ed8]">Nur essenzielle Cookies akzeptieren</button>
                             </div>
                         </div>
 
                         <div className="h-px w-full bg-slate-200"></div>
 
                         {/* Footer Section */}
-                        <div className="flex items-center justify-center gap-3 bg-[#f1f5f9] px-6 py-4 text-[13.5px] text-[#64748b]">
+                        <div className="flex items-center justify-center gap-6 bg-white px-6 py-4 text-[13.5px] text-[#64748b]">
                             <button onClick={() => {}} className="hover:text-slate-900 transition-colors">Präferenzen</button>
                             <span className="flex items-center gap-1.5 hover:text-slate-900 transition-colors cursor-pointer">
                                 <Settings className="h-4 w-4" /> Borlabs Cookie
