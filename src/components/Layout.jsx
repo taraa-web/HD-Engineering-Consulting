@@ -2,8 +2,11 @@
 import React from 'react';
 import { Link, Outlet, NavLink } from 'react-router-dom';
 import CookieConsent from './CookieConsent';
+import useScrollReveal from '../hooks/useScrollReveal';
 
 export default function Layout() {
+    useScrollReveal();
+
     return (
         <div className="font-sans antialiased text-foreground">
             <CookieConsent />
